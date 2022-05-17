@@ -6,20 +6,19 @@ class Board:
     def __init__(self):
         self.pieces = Pieces()
         # Default FEN
-        self.import_from_fen("rnbqkbnr/pppppppp/8/8/8/N7/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-        self.board = self.board[::-1]
+        self.import_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPP/RNBQKBNR w KQkq - 0 1")
+        #self.board = self.board[::-1]
+        self.visual_dict = [700, 600, 500, 400, 300, 200, 100, 0]
 
-        number_dictionary = [700, 600, 500, 400, 300, 200, 100, 0]
+        moves = self.board[1][1].legal_moves(self.board)
+        self.visualize_moves(moves)
 
 
-        print(self.board[2][0].color)
-        moves = self.board[2][0].legal_moves(self.board)
-        moves.append([2, 0])
-        print(moves)
+    def visualize_moves(self, moves):
         rects = []
         for pos in moves:
             y, x = pos
-            pos = [x * 100, number_dictionary[y]]
+            pos = [x * 100, self.visual_dict[y]]
             rects.append((pos[0], pos[1], pos[0] + 100, pos[1] + 100))
 
         image = Image.open("resources/empty_board.png").convert('RGBA')
@@ -49,7 +48,7 @@ class Board:
 
     # To set up the board from the FEN field
     def set_board_from_fen(self, position):
-        ranks = position.split("/")
+        ranks = position.split("/")[::-1]
         board = [["" for _ in range(8)] for _ in range(8)]
         
         for rank_index, Rank in enumerate(ranks):
